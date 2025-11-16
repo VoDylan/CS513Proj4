@@ -1,2 +1,7 @@
 # Initial Commit
+from linkstate import GraphLS
+
 graph = {'A' : {'B' : 2, 'E' : 6, 'D' : 5}, 'B' : {'A' : 2, 'C' : 1}, 'C' : {'B' : 1, 'E' : 3, 'H' : 1}, 'D' : {'A' : 5, 'E' : 4, 'F' : 2}, 'E' : {'A' : 6, 'D' : 4, 'F' : 1, 'C' : 3}, 'F' : {'D' : 2, 'E' : 1, 'G' : 3}, 'G' : {'F' : 7, 'H' : 3}, 'H' : {'G' : 3, 'C' : 1}}
+
+graphLS = GraphLS(graph)
+graphLS.dijkstra("A")
