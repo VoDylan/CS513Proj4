@@ -1,8 +1,11 @@
 import heapq
 
-class GraphLS:
+class routing:
     def __init__(self, graph_dict):
         self.graph = graph_dict
+
+    def dist_vect(self, start):
+        pass
 
     def dijkstra(self, start):
         if start not in self.graph:

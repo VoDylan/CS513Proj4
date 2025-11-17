@@ -1,56 +1,90 @@
 import sys
-from linkstate import GraphLS
+from routing import routing
 
-graph = {'A' : {'B' : 2, 'E' : 6, 'D' : 5}, 'B' : {'A' : 2, 'C' : 1}, 'C' : {'B' : 1, 'E' : 3, 'H' : 1}, 'D' : {'A' : 5, 'E' : 4, 'F' : 2}, 'E' : {'A' : 6, 'D' : 4, 'F' : 1, 'C' : 3}, 'F' : {'D' : 2, 'E' : 1, 'G' : 3}, 'G' : {'F' : 7, 'H' : 3}, 'H' : {'G' : 3, 'C' : 1}}
-
-
-
-# Get the first argument (python3 main.py <graph_file>)
-try:
-    # File given as input
-    graph_file = sys.argv[1]
-except: 
-    # Prompt user for input
-    print("Enter nodes in the format 'X Y cost', pressing enter after each. \nTo finish, type 'done'. \nTo view your graph, type 'view'.\nTo clear your graph, type 'clear'.")
+def process_line(graph, line):
+    try:
+        x, y, cost = line.split()
+    except:
+        return
     
-    while (1):
-        user_in = input('>>> ')
-        if (user_in.lower() == "done" or user_in.lower() == "d"): break
-        if (user_in.lower() == "view" or user_in.lower() == "v"): 
-            for key, value in graph.items():
-                print(f"{key}: {value}")
-            continue
-        if (user_in.lower() == "clear" or user_in.lower() == "c"): 
-            graph.clear()
-            continue
-        
+    if cost == '-':  # remove edge
         try:
-            [x, y, cost] = user_in.split()
-            
-            # Remove an edge
-            if cost == '-':
-                try:
-                    del graph[x][y]
-                except:
-                    print("Edge" + x + "->" + y + " doesn't exist")
-                try:
-                    del graph[y][x]
-                except:
-                    print("Edge" + y + "->" + x + " doesn't exist")
-            else: 
-                if x not in graph: 
-                    graph[x] = {y : int(cost)}
-                else:
-                    graph[x][y] = int(cost)
-                    
-                if y not in graph:
-                    graph[y] = {x : int(cost)}
-                else: 
-                    graph[y][x] = int(cost)
+            del graph[x][y]
         except:
-            print("Please enter a valid input.")
+            pass
+        try:
+            del graph[y][x]
+        except:
+            pass
+        return
+    
+    cost = int(cost)
 
+    if x not in graph.graph:
+        graph.graph[x] = {y: cost}
+    else:
+        graph.graph[x][y] = cost
 
-graphLS = GraphLS(graph)
-graphLS.dijkstra("A")
-graphLS.dijkstra("X")
+    if y not in graph.graph:
+        graph.graph[y] = {x: cost}
+    else:
+        graph.graph[y][x] = cost
+
+# Run
+graph = routing({})
+try:
+    graph_file = sys.argv[1]
+
+    with open(graph_file, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            process_line(graph, line)
+
+    print("Graph loaded successfully:\n")
+    for key, value in graph.graph.items():
+        print(f"{key}: {value}")
+
+except:
+    pass
+
+print("Enter nodes in the format 'X Y cost', pressing enter after each") 
+print("To view your graph, type 'view'")
+print("To clear your graph, type 'clear'")
+print("To run linkstate, type 'ls X' to generate a routing table for node X")
+print("To run an iteration of distance vector, type 'dv X' to print the vector for node X")
+print("To exit, type 'done' or 'exit'")
+
+while True:
+    user_in = input('>>> ')
+
+    if user_in.lower() in ["done", "d", "exit", "e"]:
+        break
+
+    if user_in.lower() in ["view", "v"]:
+        for key, value in graph.graph.items():
+            print(f"{key}: {value}")
+        continue
+    
+    if user_in.lower() in ["clear", "c"]:
+        graph.graph.clear()
+        continue
+
+    # Handle ls X or dv X
+    try:
+        cmd, node = user_in.split()
+        if cmd.lower() == "ls":
+            graph.dijkstra(node)
+            continue
+        elif cmd.lower() == "dv":
+            graph.dist_vect(node)
+            continue
+    except:
+        pass
+
+    # Handle X Y cost
+    try:
+        process_line(graph, user_in)
+    except:
+        print("Please enter a valid input.")
