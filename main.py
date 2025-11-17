@@ -56,6 +56,9 @@ print("To run linkstate, type 'ls X' to generate a routing table for node X")
 print("To run an iteration of distance vector, type 'dv X' to print the vector for node X")
 print("To exit, type 'done' or 'exit'")
 
+
+graph.init_distance_vectors()
+
 while True:
     user_in = input('>>> ')
 
@@ -78,7 +81,7 @@ while True:
             graph.dijkstra(node)
             continue
         elif cmd.lower() == "dv":
-            graph.dist_vect(node)
+            graph.distance_vector_iteration(node)
             continue
     except:
         pass

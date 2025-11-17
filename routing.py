@@ -1,11 +1,52 @@
 import heapq
+import copy
+import math
 
 class routing:
     def __init__(self, graph_dict):
         self.graph = graph_dict
 
-    def dist_vect(self, start):
-        pass
+        self.DV = {}
+        self.init_distance_vectors()
+
+
+    def init_distance_vectors(self):
+        self.DV = {}
+
+        for node in self.graph:
+            self.DV[node] = {}
+            for dest in self.graph:
+                if node == dest:
+                    self.DV[node][dest] = 0
+                elif dest in self.graph[node]:
+                    self.DV[node][dest] = self.graph[node][dest]
+                else:
+                    self.DV[node][dest] = math.inf
+
+
+    def distance_vector_iteration(self, node):
+        old_DV = copy.deepcopy(self.DV)
+
+        for x in self.graph:
+            for v, cost_xv in self.graph[x].items():
+
+                for d in self.graph:
+                    new_cost = cost_xv + old_DV[v][d]
+
+                    if new_cost < self.DV[x][d]:
+                        self.DV[x][d] = new_cost
+        self.print_dv(node)
+
+    def print_dv(self, node):
+        print(f"Distance Vector for {node}")
+        print("--------------------------------")
+        for dest in sorted(self.DV[node]):
+            cost = self.DV[node][dest]
+            if cost == math.inf:
+                print(f"{dest} unreachable")
+            else:
+                print(f"{dest} {cost}")
+
 
     def dijkstra(self, start):
         if start not in self.graph:
