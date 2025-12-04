@@ -27,14 +27,24 @@ class routing:
     def distance_vector_iteration(self, node):
         old_DV = copy.deepcopy(self.DV)
 
+        # Loop through nodes
         for x in self.graph:
+            
+            new_distances = copy.deepcopy(self.graph[x])
+            
+            # Loop through node neighbours
             for v, cost_xv in self.graph[x].items():
 
-                for d in self.graph:
+                # Loop through nodes
+                for d in old_DV[v]:
+                    if d == x:
+                        continue
+                    
                     new_cost = cost_xv + old_DV[v][d]
-
-                    if new_cost < self.DV[x][d]:
-                        self.DV[x][d] = new_cost
+                    
+                    if d not in new_distances or new_cost < new_distances[d]:
+                        new_distances[d] = new_cost
+            self.DV[x] = new_distances
         self.print_dv(node)
 
     def print_dv(self, node):

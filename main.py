@@ -9,11 +9,11 @@ def process_line(graph, line):
     
     if cost == '-':  # remove edge
         try:
-            del graph[x][y]
+            del graph.graph[x][y]
         except:
             pass
         try:
-            del graph[y][x]
+            del graph.graph[y][x]
         except:
             pass
         return
@@ -49,7 +49,7 @@ try:
 except:
     pass
 
-print("Enter nodes in the format 'X Y cost', pressing enter after each") 
+print("Enter nodes in the format 'X Y cost', pressing enter after each. A cost of '-' will delete the edge") 
 print("To view your graph, type 'view'")
 print("To clear your graph, type 'clear'")
 print("To run linkstate, type 'ls X' to generate a routing table for node X")
