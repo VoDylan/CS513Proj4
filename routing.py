@@ -65,31 +65,32 @@ class routing:
             return
         
         # Print header
-        print("\nDistance Vector Table")
+        print("\nRouting Table for each Node (routing table is below node header)")
         print("=" * (8 + 6 * len(nodes)))
         
-        # Print column headers
-        header = "From/To".ljust(8)
-        for dest in nodes:
-            header += dest.center(6)
+        # Column headers (sources)
+        header = "Routers:".ljust(8)
+        for src in nodes:
+            header += src.center(6)
         print(header)
         print("-" * (8 + 6 * len(nodes)))
         
-        # Print each row
-        for source in nodes:
-            row = source.ljust(8)
-            for dest in nodes:
-                if dest in self.DV[source]:
-                    cost = self.DV[source][dest]
+        # Each row is a destination
+        for dest in nodes:
+            row = dest.ljust(8)
+            for src in nodes:
+                # Access cost from src → dest
+                if dest in self.DV[src]:
+                    cost = self.DV[src][dest]
                     if cost == math.inf:
                         row += "inf".center(6)
                     else:
                         row += str(cost).center(6)
                 else:
-                    row += str(0).center(6) 
+                    row += "0".center(6)
             print(row)
         
-        print()         
+        print()
 
     def dijkstra(self, start):
         if start not in self.graph:
