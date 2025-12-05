@@ -5,6 +5,7 @@ def process_line(graph, line):
     try:
         x, y, cost = line.split()
     except:
+        print("Invalid input")
         return
     
     if cost == '-':  # remove edge
@@ -52,8 +53,8 @@ except:
 print("Enter nodes in the format 'X Y cost', pressing enter after each. A cost of '-' will delete the edge") 
 print("To view your graph, type 'view'")
 print("To clear your graph, type 'clear'")
-print("To run linkstate, type 'ls X' to generate a routing table for node X")
-print("To run an iteration of distance vector, type 'dv X' to print the vector for node X")
+print("To run linkstate, type 'ls X' to generate all paths from node X to all other nodes")
+print("To run an iteration of distance vector, type 'dv X' to print the routing table for node X, or just 'dv' to run an iteration and print all routing tables")
 print("To exit, type 'done' or 'exit'")
 
 
@@ -73,6 +74,11 @@ while True:
     if user_in.lower() in ["clear", "c"]:
         graph.graph.clear()
         continue
+    
+    if user_in.lower() in ["dv"]:
+        graph.distance_vector_iteration()
+        graph.print_dv()
+        continue
 
     # Handle ls X or dv X
     try:
@@ -81,7 +87,8 @@ while True:
             graph.dijkstra(node)
             continue
         elif cmd.lower() == "dv":
-            graph.distance_vector_iteration(node)
+            graph.distance_vector_iteration()
+            graph.print_dv_node(node)
             continue
     except:
         pass

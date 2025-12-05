@@ -24,7 +24,7 @@ class routing:
                     self.DV[node][dest] = math.inf
 
 
-    def distance_vector_iteration(self, node):
+    def distance_vector_iteration(self):
         old_DV = copy.deepcopy(self.DV)
 
         # Loop through nodes
@@ -45,9 +45,8 @@ class routing:
                     if d not in new_distances or new_cost < new_distances[d]:
                         new_distances[d] = new_cost
             self.DV[x] = new_distances
-        self.print_dv(node)
 
-    def print_dv(self, node):
+    def print_dv_node(self, node):
         print(f"Distance Vector for {node}")
         print("--------------------------------")
         for dest in sorted(self.DV[node]):
@@ -56,7 +55,41 @@ class routing:
                 print(f"{dest} unreachable")
             else:
                 print(f"{dest} {cost}")
-
+       
+    def print_dv(self):
+        # Get all nodes
+        nodes = sorted(self.DV.keys())
+        
+        if not nodes:
+            print("No nodes in distance vector table")
+            return
+        
+        # Print header
+        print("\nDistance Vector Table")
+        print("=" * (8 + 6 * len(nodes)))
+        
+        # Print column headers
+        header = "From/To".ljust(8)
+        for dest in nodes:
+            header += dest.center(6)
+        print(header)
+        print("-" * (8 + 6 * len(nodes)))
+        
+        # Print each row
+        for source in nodes:
+            row = source.ljust(8)
+            for dest in nodes:
+                if dest in self.DV[source]:
+                    cost = self.DV[source][dest]
+                    if cost == math.inf:
+                        row += "inf".center(6)
+                    else:
+                        row += str(cost).center(6)
+                else:
+                    row += str(0).center(6) 
+            print(row)
+        
+        print()         
 
     def dijkstra(self, start):
         if start not in self.graph:
