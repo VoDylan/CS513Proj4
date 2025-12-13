@@ -97,13 +97,14 @@ class routing:
             print(f"Error: Node {start} does not exist.")
             return
         
-        # Distance table
+        # init Distance table
         dist = {node: float('inf') for node in self.graph}
         dist[start] = 0
 
-        # Previous-hop table
+        # init Previous-hop table
         prev = {node: None for node in self.graph}
 
+        # init Priority queue
         pq = [(0, start)]
 
         while pq:
@@ -117,6 +118,7 @@ class routing:
 
                 if new_cost < dist[v]:
                     dist[v] = new_cost
+                    print(prev)
                     prev[v] = u
                     heapq.heappush(pq, (new_cost, v))
 
@@ -124,7 +126,7 @@ class routing:
 
 
     def get_first_hop(self, start, node, prev):
-        """Return the FIRST hop from the start along the shortest path."""
+        # Return the first hop from the start along the shortest path
         if node == start:
             return "-"
 
@@ -139,12 +141,12 @@ class routing:
 
         if len(path) < 2:
             return None
-        return path[-2]  # the FIRST hop from the start (obtained with second to last item in list)
+        return path[-2]  # the last hop to the end (obtained with second to last item in list)
 
 
     def print_table(self, start, dist, prev):
         print(f"Link-State Routing Table for {start}")
-        print("--------------------------------")
+        print("------------------------------")
 
         # sort by cost
         nodes = sorted(dist.keys(), key=lambda x: (dist[x], x))
