@@ -45,6 +45,7 @@ try:
 
     print("Graph loaded successfully:\n")
     for key, value in graph.graph.items():
+        
         print(f"{key}: {value}")
 
 except:

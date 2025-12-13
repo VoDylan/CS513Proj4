@@ -118,7 +118,7 @@ class routing:
 
                 if new_cost < dist[v]:
                     dist[v] = new_cost
-                    print(prev)
+
                     prev[v] = u
                     heapq.heappush(pq, (new_cost, v))
 
